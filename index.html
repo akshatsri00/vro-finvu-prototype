@@ -1,0 +1,2059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Uploads - My Investments | Portfolio Manager | Value Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    color: #1f2937;
+    background: #ffffff;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: #1c509d; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+  ul { list-style: none; padding: 0; margin: 0; }
+  h1, h2, h3, h4 { font-family: 'Lora', Georgia, serif; font-weight: 500; letter-spacing: -0.5px; }
+
+  :root {
+    /* VRO design system colors */
+    --vr-blue: #1c509d;            /* primary-blue-btn (Upload PDF) - matches site theme-color */
+    --vr-blue-dark: #143d78;
+    --vr-blue-light: #e8f0fb;
+    --vr-purple: #7e22ce;           /* Finvu drawer / global premium purple */
+    --vr-purple-dark: #6b21a8;
+    --vr-orange: #ffa825;
+    --vr-orange-dark: #f59e0b;
+    --vr-red: #d92e2e;
+    --vr-text: #1f2937;
+    --vr-text-muted: #6b7280;
+    --vr-border: #e5e7eb;
+    --vr-border-light: #f0f1f4;
+    --vr-green-light: #e8f8f1;
+    --vr-green-text: #047857;
+  }
+
+  /* Auto Import card scope — uses VRO's lighter purple #A949CD instead of the global premium purple */
+  .auto-import-card {
+    --vr-purple: #A949CD;
+    --vr-purple-dark: #8e35ad;
+  }
+
+  /* ---------- 12-col grid system ---------- */
+  /* Fixed 1180px container, 12 columns, 30px gutter, ~70.83px col width */
+  .container {
+    width: 1180px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0;
+  }
+  .grid-12 {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: 30px;
+  }
+  .col-1  { grid-column: span 1; }
+  .col-2  { grid-column: span 2; }
+  .col-3  { grid-column: span 3; }
+  .col-4  { grid-column: span 4; }
+  .col-5  { grid-column: span 5; }
+  .col-6  { grid-column: span 6; }
+  .col-7  { grid-column: span 7; }
+  .col-8  { grid-column: span 8; }
+  .col-9  { grid-column: span 9; }
+  .col-10 { grid-column: span 10; }
+  .col-11 { grid-column: span 11; }
+  .col-12 { grid-column: span 12; }
+
+  /* Below 1210px (1180 + breathing room), allow flex padding */
+  @media (max-width: 1210px) {
+    .container { width: 100%; padding: 0 24px; }
+  }
+
+  /* Header */
+  .main-header {
+    background: #fff;
+    border-bottom: 1px solid var(--vr-border-light);
+    padding: 18px 0;
+  }
+  .main-header .container { display: flex; align-items: center; gap: 32px; }
+  .logo {
+    display: flex; align-items: center;
+    flex-shrink: 0;
+    height: 30px;
+  }
+  .logo svg { display: block; height: 30px; width: auto; }
+
+  .primary-nav { display: flex; gap: 24px; flex: 1; justify-content: center; }
+  .primary-nav a, .primary-nav .has-dropdown {
+    padding: 9px 4px; color: #1f2937; font-weight: 500; border-radius: 4px;
+    font-size: 16px;
+    display: inline-flex; align-items: center; gap: 6px;
+    cursor: pointer;
+  }
+  .primary-nav a:hover, .primary-nav .has-dropdown:hover { color: var(--vr-blue); }
+
+  .header-right { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+  .primary-nav a.subscribe-btn,
+  .subscribe-btn {
+    background: var(--vr-orange);
+    color: #1f2937;
+    padding: 10px 28px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: background 0.15s;
+    margin-left: 4px;
+  }
+  .subscribe-btn:hover { background: var(--vr-orange-dark); }
+  .icon-btn-h {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: grid; place-items: center;
+    color: #6b7280;
+    transition: background 0.15s;
+  }
+  .icon-btn-h:hover { background: #f3f4f6; }
+  .user-avatar-h {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: #1f7ad9;
+    color: #fff; display: grid; place-items: center;
+    font-weight: 600; font-size: 14px;
+  }
+
+  /* Page header */
+  .page-header { padding: 48px 0 32px; }
+  .page-header h1 {
+    font-size: 48px;
+    font-weight: 500;
+    color: #111;
+    margin: 0;
+    letter-spacing: -1.2px;
+    align-self: center;
+  }
+  .page-header .investor-select { align-self: center; justify-self: end; }
+
+  /* Investor selector */
+  .investor-select { position: relative; }
+  .investor-btn {
+    background: var(--vr-blue-light);
+    color: #1f2937;
+    padding: 14px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 16px;
+    display: flex; align-items: center; gap: 14px;
+    min-width: 360px;
+    transition: all 0.15s;
+  }
+  .investor-btn:hover { background: #d8e6f8; }
+  .verified-tick {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--vr-blue);
+    display: grid; place-items: center;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .investor-btn .name { flex: 1; text-align: left; }
+  .chev { transition: transform 0.2s; color: #6b7280; }
+  .investor-btn.open .chev { transform: rotate(180deg); }
+
+  .investor-dropdown {
+    position: absolute; top: calc(100% + 6px); right: 0;
+    background: #fff;
+    border: 1px solid var(--vr-border);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    min-width: 360px;
+    z-index: 30;
+    display: none;
+    overflow: hidden;
+  }
+  .investor-dropdown.open { display: block; }
+  .investor-dropdown h4 {
+    margin: 0; padding: 14px 18px 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px; font-weight: 600;
+    color: var(--vr-text-muted);
+    text-transform: uppercase; letter-spacing: 0.6px;
+  }
+  .investor-dropdown ul li {
+    padding: 12px 18px;
+    display: flex; align-items: center; gap: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.1s;
+  }
+  .investor-dropdown ul li:hover { background: #f9fafb; }
+  .investor-dropdown ul li.selected { background: var(--vr-blue-light); }
+  .investor-dropdown .add-inv {
+    color: var(--vr-blue); font-weight: 600; border-top: 1px solid var(--vr-border);
+  }
+
+  /* Body */
+  .body-content { padding: 0 0 80px; }
+  .back-to-folio {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--vr-blue);
+    font-weight: 500;
+    margin-bottom: 24px;
+    font-size: 15px;
+  }
+  .back-to-folio:hover { text-decoration: none; }
+
+  /* On narrow screens, stack the 4/8 split */
+  @media (max-width: 980px) {
+    .body-content .grid-12 > aside,
+    .body-content .grid-12 > main { grid-column: 1 / -1; }
+  }
+
+  /* Vertical tabs */
+  .investment-type-tabs {
+    background: #fff;
+    border: 1px solid var(--vr-border);
+    border-radius: 10px;
+    padding: 8px;
+    position: sticky; top: 16px;
+  }
+  .investment-type-tabs li a {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 20px;
+    font-weight: 400;
+    color: #1f2937;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: all 0.15s;
+    border-bottom: 1px solid var(--vr-border-light);
+  }
+  .investment-type-tabs li:last-child a { border-bottom: none; }
+  .investment-type-tabs li a:hover { background: #f9fafb; }
+  .investment-type-tabs li a.active {
+    color: var(--vr-blue);
+    font-weight: 600;
+    background: #fff;
+  }
+  .investment-type-tabs li a .arrow {
+    color: #9ca3af;
+    transition: transform 0.15s;
+  }
+  .investment-type-tabs li a:hover .arrow { transform: translateX(2px); color: var(--vr-blue); }
+  .investment-type-tabs li a.active .arrow { color: var(--vr-blue); }
+
+  /* Section cards */
+  .section-card {
+    border: 1px solid var(--vr-border);
+    border-radius: 10px;
+    padding: 32px;
+    background: #fff;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .section-head {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .section-card h2 {
+    font-size: 28px;
+    font-weight: 500;
+    margin: 0;
+    color: #111;
+    letter-spacing: -0.4px;
+    display: flex; align-items: center; gap: 12px;
+    flex-wrap: wrap;
+    line-height: 1.2;
+  }
+  .section-card h2 .icon-inline { color: var(--vr-purple); }
+  .recommended-badge {
+    background: var(--vr-green-light);
+    color: #047857;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 16px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .info-icon {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #d1d5db; color: #fff;
+    display: inline-grid; place-items: center;
+    font-size: 11px; font-weight: 700;
+    cursor: help;
+  }
+  .section-desc {
+    font-size: 16px;
+    color: #1f2937;
+    margin: 0 0 24px;
+    line-height: 1.55;
+  }
+  .section-note {
+    font-size: 14px;
+    color: var(--vr-text-muted);
+    margin: 18px 0 0;
+    line-height: 1.6;
+  }
+  .know-more {
+    margin-top: 18px;
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .know-more-icon {
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    background: #fbbf24;
+    border-radius: 3px;
+    display: grid; place-items: center;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Lora', serif;
+    font-style: italic;
+  }
+  .know-more-text strong { color: #111; font-weight: 600; }
+  .know-more-text a { color: var(--vr-blue); }
+
+  /* Inputs */
+  .input-action-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: stretch;
+  }
+  .input-field {
+    padding: 16px 20px;
+    border: 1px solid var(--vr-border);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 16px;
+    background: #fff;
+    color: #1f2937;
+    width: 100%;
+    transition: border-color 0.15s;
+  }
+  .input-field:focus {
+    outline: none;
+    border-color: var(--vr-purple);
+    box-shadow: 0 0 0 3px rgba(126, 34, 206, 0.12);
+  }
+  .input-field[readonly] { background: #f9fafb; color: #4b5563; }
+
+  .btn-purple-outline {
+    padding: 16px 36px;
+    border: 1.5px solid var(--vr-purple);
+    color: var(--vr-purple);
+    background: #fff;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn-purple-outline:hover { background: var(--vr-purple); color: #fff; }
+
+  /* Fetch Holdings → Refresh state toggle */
+  .btn-purple-outline .btn-label-refresh { display: none; align-items: center; }
+  .btn-purple-outline.is-refresh .btn-label-default { display: none; }
+  .btn-purple-outline.is-refresh .btn-label-refresh { display: inline-flex; }
+
+  .btn-blue-solid {
+    padding: 16px 36px;
+    background: var(--vr-blue);
+    color: #fff;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 16px;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .btn-blue-solid:hover { background: var(--vr-blue-dark); }
+
+  .pan-highlight { color: var(--vr-purple); font-weight: 600; }
+
+  footer {
+    background: #fff;
+    border-top: 1px solid var(--vr-border-light);
+    padding: 20px 0;
+    text-align: center;
+    font-size: 12px;
+    color: var(--vr-text-muted);
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ---------- Finvu OTP Drawer ---------- */
+  .drawer-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(17, 24, 39, 0.45);
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+  }
+  .drawer-backdrop.open { opacity: 1; visibility: visible; }
+
+  .drawer {
+    position: fixed;
+    top: 10px; right: 10px; bottom: 10px;
+    width: 480px;
+    max-width: calc(100vw - 20px);
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+    z-index: 101;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(calc(100% + 20px));
+    transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+    overflow: hidden;
+  }
+  .drawer.open { transform: translateX(0); }
+  @media (max-width: 540px) {
+    .drawer { width: calc(100vw - 20px); }
+  }
+
+  /* Drawer header */
+  .drawer-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--vr-border-light);
+    flex-shrink: 0;
+  }
+  .drawer-brand {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .vr-money-icon {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: #d1fadf;
+    display: grid; place-items: center;
+    color: #16a34a;
+    flex-shrink: 0;
+  }
+  .drawer-brand-name {
+    font-weight: 700;
+    font-size: 18px;
+    color: #111;
+    font-family: 'Inter', sans-serif;
+  }
+  .drawer-header-actions {
+    display: flex; align-items: center; gap: 16px;
+  }
+  .lang-toggle {
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    background: none; border: none;
+    padding: 4px 6px;
+  }
+  .lang-toggle:hover { color: #111; }
+  .drawer-close {
+    width: 28px; height: 28px;
+    color: #1f2937;
+    display: grid; place-items: center;
+    cursor: pointer;
+  }
+  .drawer-close:hover { color: #000; }
+
+  /* Drawer body (scrollable) */
+  .drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 24px 24px;
+  }
+  .drawer-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 10px;
+    line-height: 1.35;
+    letter-spacing: -0.2px;
+  }
+  .drawer-subtitle {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0 0 24px;
+    line-height: 1.5;
+  }
+
+  /* OTP input */
+  .otp-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .otp-cell {
+    flex: 1;
+    aspect-ratio: 1 / 1.05;
+    max-width: 60px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    background: #fff;
+    color: #111;
+    font-family: inherit;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .otp-cell:focus {
+    outline: none;
+    border-color: var(--vr-purple);
+    box-shadow: 0 0 0 3px rgba(126, 34, 206, 0.12);
+  }
+  .otp-cell.filled { border-color: #d1d5db; }
+
+  .otp-resend {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0 0 28px;
+  }
+  .otp-resend .resend-link {
+    color: var(--vr-purple);
+    font-weight: 500;
+    cursor: pointer;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+  .otp-resend.active .resend-link { pointer-events: auto; opacity: 1; }
+  .otp-resend.active .timer { display: none; }
+
+  /* Info banner */
+  .info-banner {
+    background: #f4ecff;
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex; align-items: flex-start; gap: 10px;
+    margin-bottom: 16px;
+  }
+  .info-banner-icon {
+    color: var(--vr-purple);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .info-banner-text {
+    font-size: 14px;
+    color: var(--vr-purple);
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  /* Stats card */
+  .stats-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .stat-row {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 14px;
+    color: #1f2937;
+  }
+  .stat-icon {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: #f4ecff;
+    display: grid; place-items: center;
+    color: var(--vr-purple);
+    flex-shrink: 0;
+  }
+  .supported-logos {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-left: 4px;
+  }
+  .bank-logo {
+    width: 22px; height: 22px;
+    border-radius: 4px;
+    display: grid; place-items: center;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .bank-sbi { background: #e11d48; }
+  .bank-icici { background: #f97316; }
+  .bank-axis { background: #7c2d12; color: #fff; }
+  .bank-hdfc { background: #1d4ed8; }
+  .others-pill {
+    color: #6b7280;
+    font-size: 13px;
+    margin-left: 4px;
+  }
+
+  /* Drawer footer */
+  .drawer-footer {
+    border-top: 1px solid var(--vr-border-light);
+    padding: 16px 24px 20px;
+    background: #fff;
+    flex-shrink: 0;
+  }
+  .verify-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 999px;
+    background: #d1d5db;
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: not-allowed;
+    transition: background 0.2s;
+    border: none;
+  }
+  .verify-btn.active {
+    background: var(--vr-purple);
+    cursor: pointer;
+  }
+  .verify-btn.active:hover {
+    background: var(--vr-purple-dark);
+  }
+  .terms-text {
+    text-align: center;
+    font-size: 12px;
+    color: #6b7280;
+    margin: 12px 0 14px;
+    line-height: 1.5;
+  }
+  .terms-text a {
+    color: var(--vr-purple);
+    font-weight: 500;
+  }
+  .powered-by {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-size: 12px;
+    color: #6b7280;
+  }
+  .finvu-logo {
+    display: inline-flex; align-items: center; gap: 4px;
+    color: #1c509d;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.3px;
+  }
+  .finvu-logo .finvu-mark {
+    width: 14px; height: 14px;
+    background: #1c509d;
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  }
+
+  /* ---------- Drawer Steps ---------- */
+  .drawer-step { display: none; }
+  .drawer-step.active { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+
+  /* ---------- Step 2: Select Accounts ---------- */
+  .accounts-header {
+    padding: 24px 24px 16px;
+    flex-shrink: 0;
+  }
+  .accounts-header h2 {
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 6px;
+    letter-spacing: -0.2px;
+  }
+  .accounts-header p {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+  }
+  .accounts-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 24px 16px;
+  }
+
+  .section-meta {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 8px 0 14px;
+  }
+  .section-meta .meta-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111;
+  }
+  .section-meta .meta-sub {
+    font-size: 13px;
+    color: #6b7280;
+    margin-top: 2px;
+  }
+  .section-meta .meta-count {
+    font-size: 13px;
+    color: #6b7280;
+    align-self: flex-end;
+  }
+
+  .depo-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .depo-card-head {
+    display: flex; align-items: center; gap: 12px;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed #e5e7eb;
+    margin-bottom: 4px;
+  }
+  .depo-logo {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .depo-card-head h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #111;
+    margin: 0;
+    flex: 1;
+    line-height: 1.3;
+  }
+  .depo-help {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: #d1d5db; color: #fff;
+    display: grid; place-items: center;
+    font-size: 11px; font-weight: 700;
+    cursor: help;
+    flex-shrink: 0;
+  }
+
+  .account-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px dashed #e5e7eb;
+  }
+  .account-row:last-child { border-bottom: none; }
+  .account-info {
+    flex: 1;
+    font-size: 14px;
+    color: #1f2937;
+    font-weight: 400;
+  }
+  .account-info .acc-type { font-weight: 500; }
+  .account-info .acc-num { color: #1f2937; }
+  .linked-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    color: #16a34a;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  /* Custom checkbox */
+  .acc-checkbox {
+    appearance: none;
+    width: 22px; height: 22px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    background: #fff;
+    transition: all 0.15s;
+  }
+  .acc-checkbox:hover { border-color: var(--vr-purple); }
+  .acc-checkbox:checked {
+    background: var(--vr-purple);
+    border-color: var(--vr-purple);
+  }
+  .acc-checkbox:checked::after {
+    content: "";
+    position: absolute;
+    top: 3px; left: 7px;
+    width: 5px; height: 10px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  /* Empty/error card */
+  .no-accounts-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .no-accounts-card h4 {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+    margin: 0 0 12px;
+    line-height: 1.4;
+  }
+  .no-accounts-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+  }
+  .nsdl-logo-mark {
+    width: 32px; height: 32px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  .learn-more {
+    color: var(--vr-purple);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: underline;
+  }
+
+  /* Footer info row */
+  .accounts-info-row {
+    padding: 14px 24px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-size: 13px;
+    color: #6b7280;
+    border-top: 1px solid var(--vr-border-light);
+    flex-shrink: 0;
+  }
+
+  /* Continue button (purple pill) */
+  .continue-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 999px;
+    background: #d1d5db;
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: not-allowed;
+    transition: background 0.2s;
+    border: none;
+  }
+  .continue-btn.active {
+    background: var(--vr-purple);
+    cursor: pointer;
+  }
+  .continue-btn.active:hover {
+    background: var(--vr-purple-dark);
+  }
+  .step2-footer {
+    padding: 12px 24px 18px;
+    background: #fff;
+    flex-shrink: 0;
+  }
+  .step2-footer .powered-by { margin-top: 14px; }
+
+  /* Back arrow in header */
+  .drawer-back {
+    width: 28px; height: 28px;
+    color: #1f2937;
+    display: none;
+    place-items: center;
+    cursor: pointer;
+    margin-right: 4px;
+  }
+  .drawer-back.visible { display: grid; }
+  .drawer-back:hover { color: #000; }
+
+  /* ---------- Step 3: One Last Check ---------- */
+  .review-header {
+    padding: 24px 24px 18px;
+    flex-shrink: 0;
+  }
+  .review-header h2 {
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 6px;
+    letter-spacing: -0.2px;
+  }
+  .review-header p {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.45;
+  }
+  .review-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 24px 16px;
+  }
+
+  .review-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 14px;
+    background: #fff;
+  }
+  .review-card-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px;
+  }
+  .review-card-head h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #111;
+    margin: 0;
+  }
+  .manage-link {
+    color: var(--vr-purple);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: underline;
+  }
+
+  .accounts-being-shared-sub {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0 0 14px;
+  }
+  .account-pills {
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .account-pill {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 8px 12px;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 14px;
+    color: #1f2937;
+    font-weight: 500;
+  }
+  .account-pill .pill-logo {
+    width: 16px; height: 16px;
+    flex-shrink: 0;
+    display: grid; place-items: center;
+  }
+  .account-pill .pill-num {
+    color: #1f2937;
+  }
+  .account-pill .dot {
+    color: #9ca3af;
+  }
+
+  /* Usage rows */
+  .usage-row {
+    display: flex; gap: 14px;
+    padding: 10px 0;
+    align-items: flex-start;
+  }
+  .usage-row:not(:last-child) {
+    border-bottom: 0;
+  }
+  .usage-icon {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: #f4ecff;
+    display: grid; place-items: center;
+    color: var(--vr-purple);
+    flex-shrink: 0;
+  }
+  .usage-text {
+    flex: 1;
+    min-width: 0;
+  }
+  .usage-label {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 0 0 3px;
+    line-height: 1.3;
+  }
+  .usage-value {
+    font-size: 14px;
+    color: #1f2937;
+    font-weight: 500;
+    margin: 0;
+    line-height: 1.4;
+  }
+  .view-link {
+    color: var(--vr-purple);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: underline;
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: 2px;
+  }
+
+  /* Add more accounts banner */
+  .add-more-banner {
+    background: #f4ecff;
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .add-more-banner .left {
+    font-size: 14px;
+    color: #1f2937;
+    font-weight: 500;
+  }
+  .add-more-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--vr-purple);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* Step 3 footer with two CTAs */
+  .step3-footer {
+    padding: 12px 24px 18px;
+    background: #fff;
+    flex-shrink: 0;
+  }
+  .give-permission-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 999px;
+    background: var(--vr-purple);
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border: none;
+  }
+  .give-permission-btn:hover { background: var(--vr-purple-dark); }
+  .decline-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    color: #dc2626;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 12px;
+    margin-top: 4px;
+  }
+  .decline-btn:hover { color: #b91c1c; }
+  .step3-footer .powered-by { margin-top: 12px; }
+
+  /* ---------- Step 4: Success ---------- */
+  .success-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 56px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .success-check {
+    width: 96px; height: 96px;
+    border-radius: 50%;
+    background: #d1fadf;
+    display: grid; place-items: center;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .success-check::before {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border-radius: 50%;
+    background: #16a34a;
+  }
+  .success-check svg {
+    position: relative;
+    z-index: 1;
+    color: #fff;
+  }
+  .success-headline {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #111;
+    text-align: center;
+    margin: 0 0 24px;
+    line-height: 1.4;
+    max-width: 360px;
+    letter-spacing: -0.1px;
+  }
+  .success-pills {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+    margin-bottom: 24px;
+  }
+  .success-pills .account-pill {
+    background: transparent;
+    border: none;
+    padding: 6px 0;
+  }
+  .success-info-banner {
+    background: #f4ecff;
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 10px;
+    width: 100%;
+    font-size: 13px;
+    color: #1f2937;
+  }
+  .success-info-banner .icon {
+    width: 20px; height: 20px;
+    flex-shrink: 0;
+    color: #6b7280;
+  }
+  .success-footer-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 24px;
+    border-top: 1px solid var(--vr-border-light);
+    flex-shrink: 0;
+  }
+  .success-footer-bar .drawer-brand-name { font-size: 16px; }
+  .redirect-msg {
+    text-align: center;
+    font-size: 13px;
+    color: #6b7280;
+    padding: 14px 24px 18px;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="main-header">
+  <div class="container">
+    <a href="#" class="logo" aria-label="Value Research Stock Advisor">
+      <svg width="161" height="30" viewBox="0 0 161 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M0.792969 11.4325V27.8576H26.5365V8.04773C24.9781 9.64226 23.1956 11.1929 21.6371 12.7875C20.9164 13.5211 20.1761 14.2549 19.4212 14.9445C16.47 17.5565 12.754 19.425 10.6257 22.7363C8.73127 20.9804 7.63549 18.5054 5.8092 16.681C4.08518 14.9739 1.75238 13.6532 0.792969 11.4325Z" fill="#D81921"/>
+        <path d="M36.0297 13.0052L32.8203 0.835571H35.718L37.145 7.02306L37.856 10.5301H37.9924L38.7229 7.02306L40.1645 0.835571H42.921L39.7116 13.0052H36.0297Z" fill="#010101"/>
+        <path d="M50.8387 13.0038C50.6122 13.0267 50.3834 13.0035 50.1661 12.9355C49.9487 12.8675 49.7471 12.7563 49.5735 12.6084C49.3998 12.4605 49.2577 12.2788 49.1554 12.0746C49.0532 11.8702 48.993 11.6473 48.9784 11.4191H48.8907C48.5791 12.5832 47.5368 13.2142 46.1683 13.2142C44.4345 13.2142 43.2852 12.236 43.2852 10.5288C43.2852 8.64574 44.6926 7.75552 47.3128 7.75552H48.7738V7.30063C48.7738 6.23922 48.321 5.68161 47.1424 5.68161C46.7119 5.66553 46.2847 5.76104 45.9016 5.95894C45.5186 6.15683 45.1929 6.45045 44.9556 6.81151L43.5482 5.55933C44.1375 4.54683 45.4426 3.79846 47.4443 3.79846C49.8793 3.79846 51.3404 4.93325 51.3404 7.19792V11.1354H52.3144V13.0038H50.8387ZM48.7543 10.2306V9.14957H47.381C46.3582 9.14957 45.803 9.51634 45.803 10.2158V10.5631C45.803 11.1892 46.3242 11.5413 47.1375 11.5413C48.0433 11.5413 48.7543 11.0865 48.7543 10.2501" fill="#010101"/>
+        <path d="M65.7811 11.3621H65.6593C65.4775 11.9155 65.122 12.3948 64.6461 12.728C64.1701 13.0613 63.5995 13.2309 63.0197 13.2111C61.3054 13.2111 60.0977 12.0077 60.0977 9.82621V4.02515H62.6642V9.49847C62.6642 10.6333 63.1512 11.2398 64.174 11.2398C64.9727 11.2398 65.7567 10.8045 65.7567 9.93383V4.02515H68.3233V13.0203H65.7567L65.7811 11.3621Z" fill="#010101"/>
+        <path d="M70.9609 8.53813C70.9609 5.60335 72.6265 3.79846 75.3149 3.79846C78.0031 3.79846 79.6395 5.55933 79.6395 8.36693V9.13484H73.5128V9.29134C73.5128 10.4408 74.258 11.2479 75.6265 11.2479C76.0794 11.2587 76.5284 11.1635 76.9384 10.9698C77.3484 10.7763 77.7079 10.4897 77.9885 10.1327L79.3765 11.649C78.685 12.505 77.4674 13.2386 75.5437 13.2386C72.5388 13.2386 70.9609 11.4387 70.9609 8.56259V8.53813ZM73.5128 7.58433V7.72618H77.1216V7.54519C77.1216 6.37617 76.4446 5.64737 75.3343 5.64737C75.0859 5.63451 74.8376 5.67533 74.6062 5.76712C74.3748 5.85889 74.1657 5.99949 73.993 6.1794C73.8203 6.3593 73.6881 6.57432 73.6053 6.80995C73.5225 7.04557 73.4909 7.29629 73.5128 7.54519" fill="#010101"/>
+        <path d="M87.3518 12.8983H84.7852V0.733643H89.4703C91.8517 0.733643 93.1862 2.24995 93.1862 4.60267C93.1862 6.30973 92.4069 7.65484 91.053 8.02658L93.4297 12.8886H90.5806L88.5498 8.38364H87.3518V12.8983ZM88.8469 6.36353C90.0595 6.36353 90.4784 5.92821 90.4784 4.86191V4.33854C90.4784 3.27712 90.0595 2.8418 88.8469 2.8418H87.3518V6.36353H88.8469Z" fill="#010101"/>
+        <path d="M94.3945 8.42851C94.3945 5.49374 96.0601 3.68884 98.7483 3.68884C101.436 3.68884 103.073 5.44971 103.073 8.25243V9.02032H96.946V9.17692C96.946 10.3312 97.6912 11.1334 99.0601 11.1334C99.5126 11.1422 99.9613 11.0462 100.371 10.8528C100.78 10.6594 101.14 10.3738 101.422 10.0182L102.81 11.5344C102.118 12.3904 100.901 13.1193 98.9769 13.1193C95.9721 13.1193 94.3945 11.3242 94.3945 8.44808V8.42851ZM96.946 7.46982V7.60677H100.555V7.45026C100.555 6.28124 99.878 5.54754 98.7684 5.54754C98.5187 5.5354 98.2709 5.5769 98.0394 5.66925C97.8079 5.7616 97.5993 5.90266 97.4262 6.08295C97.254 6.26321 97.122 6.47851 97.0388 6.71437C96.9565 6.95022 96.9249 7.20114 96.946 7.45026" fill="#010101"/>
+        <path d="M104.094 11.4167L105.555 10.0765C105.91 10.4743 106.347 10.7897 106.835 11.0008C107.324 11.2119 107.852 11.3138 108.384 11.2994C109.393 11.2994 110.016 10.9815 110.016 10.3211C110.016 9.83198 109.597 9.65587 108.906 9.55313L107.445 9.32325C105.847 9.07873 104.581 8.39882 104.581 6.69176C104.581 4.8086 106.09 3.67871 108.677 3.67871C110.43 3.67871 111.662 4.16785 112.407 5.05317L111.126 6.52056C110.8 6.17922 110.405 5.91121 109.967 5.73419C109.529 5.55714 109.06 5.47507 108.589 5.49338C107.615 5.49338 107.099 5.80642 107.099 6.40317C107.099 6.92653 107.513 7.08306 108.209 7.18577L109.631 7.41077C111.243 7.65533 112.514 8.33523 112.514 10.0472C112.514 11.9107 111.004 13.0944 108.345 13.0944C106.368 13.0944 104.825 12.4488 104.094 11.4021" fill="#010101"/>
+        <path d="M113.828 8.42851C113.828 5.49374 115.498 3.68884 118.187 3.68884C120.875 3.68884 122.511 5.44971 122.511 8.25243V9.02032H116.379V9.17692C116.379 10.3312 117.129 11.1334 118.498 11.1334C118.951 11.1422 119.4 11.0462 119.809 10.8528C120.218 10.6594 120.578 10.3738 120.86 10.0182L122.248 11.5344C121.552 12.3904 120.339 13.1193 118.41 13.1193C115.41 13.1193 113.828 11.3242 113.828 8.44808V8.42851ZM116.379 7.46982V7.60677H119.994V7.45026C119.994 6.28124 119.316 5.54754 118.206 5.54754C117.957 5.53467 117.708 5.57564 117.476 5.66767C117.244 5.7597 117.035 5.90065 116.862 6.08101C116.688 6.26137 116.555 6.47693 116.472 6.71314C116.39 6.94935 116.357 7.20071 116.379 7.45026" fill="#010101"/>
+        <path d="M37.6597 28.1462C36.7813 28.1626 35.9091 27.9961 35.098 27.6571C34.4139 27.3668 33.8104 26.9135 33.3398 26.3364L34.8009 24.7223C35.1872 25.166 35.6639 25.5213 36.1986 25.7642C36.6874 25.9844 37.2166 26.0994 37.7522 26.1017C38.2436 26.1347 38.7305 25.9908 39.1256 25.6957C39.2887 25.5497 39.4169 25.369 39.5013 25.1667C39.5856 24.9643 39.6236 24.7456 39.6126 24.5267C39.6285 24.3469 39.6043 24.1659 39.542 23.9968C39.4796 23.8276 39.3807 23.6745 39.2522 23.5484C38.896 23.2869 38.4746 23.1293 38.0347 23.0935L36.8123 22.8881C35.9342 22.8014 35.1215 22.3836 34.5379 21.7191C34.0577 21.0924 33.8081 20.3182 33.8317 19.5278C33.8053 19.0336 33.8911 18.54 34.0826 18.084C34.2741 17.6281 34.5664 17.2218 34.9373 16.8962C35.8273 16.2271 36.9251 15.8978 38.0347 15.9669C38.8432 15.9485 39.6473 16.0897 40.4016 16.3827C41.0231 16.6283 41.5785 17.0169 42.0233 17.5174L40.6012 19.112C40.2924 18.7665 39.9161 18.4885 39.4957 18.2952C39.0362 18.0904 38.5373 17.99 38.0347 18.0017C36.9048 18.0017 36.3447 18.4908 36.3447 19.4103C36.3318 19.5823 36.3591 19.755 36.4241 19.9146C36.4893 20.0742 36.5905 20.2165 36.7197 20.3299C37.0896 20.5761 37.5115 20.7319 37.9519 20.7848L39.1742 21.0049C40.0039 21.1129 40.7754 21.4909 41.3707 22.081C41.9054 22.6903 42.1816 23.4856 42.1402 24.2968C42.1452 24.8178 42.0474 25.3348 41.8528 25.8179C41.6659 26.2829 41.3741 26.6981 41.0005 27.031C40.5927 27.3882 40.1174 27.6594 39.6028 27.8283C38.9772 28.0414 38.3204 28.1488 37.6597 28.1462Z" fill="#D81921"/>
+        <path d="M48.57 27.9438C48.2066 27.9733 47.8412 27.9257 47.4973 27.8044C47.1533 27.683 46.8384 27.4905 46.5732 27.2394C46.1308 26.7495 45.8965 26.1053 45.9206 25.4443V21.2133H43.5781V19.2568H45.1025C45.382 19.2833 45.6614 19.205 45.8866 19.0367C45.9785 18.9254 46.0472 18.7964 46.0881 18.6578C46.1291 18.519 46.1418 18.3735 46.1253 18.2297V16.1948H48.3995V19.2568H51.7697V21.2133H48.3995V25.9922H51.7697V27.9487L48.57 27.9438Z" fill="#D81921"/>
+        <path d="M57.9487 28.1439C57.3327 28.1529 56.7203 28.0484 56.1418 27.8357C55.6257 27.6396 55.1586 27.3324 54.7734 26.9357C54.3873 26.5254 54.0934 26.0368 53.9114 25.5026C53.5087 24.268 53.5087 22.9366 53.9114 21.7021C54.093 21.1691 54.3871 20.682 54.7734 20.2738C55.157 19.874 55.6246 19.5648 56.1418 19.3689C57.3134 18.9581 58.5889 18.9581 59.7604 19.3689C60.2762 19.565 60.7421 19.874 61.124 20.2738C61.5104 20.682 61.8043 21.1691 61.986 21.7021C62.3886 22.9366 62.3886 24.268 61.986 25.5026C61.8039 26.0368 61.5101 26.5254 61.124 26.9357C60.7406 27.3323 60.2751 27.6396 59.7604 27.8357C59.1804 28.0488 58.5662 28.1533 57.9487 28.1439ZM57.9487 26.295C58.1918 26.3093 58.4352 26.2698 58.6615 26.1793C58.8879 26.0889 59.0918 25.9498 59.2587 25.7716C59.5982 25.3609 59.772 24.8372 59.7458 24.3042V22.9248C59.7715 22.3918 59.5979 21.8683 59.2587 21.4575C58.9058 21.121 58.4378 20.9334 57.9511 20.9334C57.4645 20.9334 56.9965 21.121 56.6435 21.4575C56.3044 21.8683 56.1308 22.3918 56.1565 22.9248V24.3042C56.1303 24.8372 56.3041 25.3609 56.6435 25.7716C56.8096 25.9496 57.0126 26.0888 57.238 26.1792C57.4636 26.2697 57.7063 26.3092 57.9487 26.295Z" fill="#D81921"/>
+        <path d="M68.3577 28.1439C67.7323 28.1536 67.1102 28.0493 66.5217 27.8358C66.0036 27.641 65.5347 27.3336 65.1483 26.9358C64.7624 26.5255 64.4683 26.0367 64.2863 25.5026C63.8837 24.268 63.8837 22.9367 64.2863 21.702C64.468 21.1693 64.762 20.6821 65.1483 20.2738C65.5331 19.8729 66.0023 19.5636 66.5217 19.3689C67.1037 19.1566 67.7193 19.0522 68.3383 19.0608C69.1421 19.0201 69.9396 19.223 70.6272 19.6428C71.1982 20.0232 71.6532 20.5548 71.9422 21.1787L70.0428 22.2254C69.8986 21.9054 69.6896 21.6189 69.4291 21.3841C69.1228 21.1412 68.7376 21.0209 68.3481 21.0466C68.107 21.0309 67.8652 21.0662 67.6387 21.1504C67.4121 21.2347 67.2058 21.3661 67.0331 21.5358C66.7012 21.9064 66.5264 22.3926 66.546 22.8906V24.3043C66.5264 24.8024 66.7012 25.2884 67.0331 25.6591C67.2108 25.8319 67.4228 25.9647 67.6554 26.0491C67.8879 26.1333 68.1357 26.1672 68.3821 26.1483C68.7866 26.1722 69.1864 26.0527 69.512 25.8108C69.7994 25.5678 70.0358 25.2703 70.2084 24.9352L72.0834 26.0113C71.7808 26.6426 71.3085 27.1763 70.7197 27.552C70.0059 27.9743 69.1856 28.1799 68.3577 28.1439Z" fill="#D81921"/>
+        <path d="M74.1172 15.4891H76.5961V22.5571H76.713L77.8721 21.1973L79.6788 19.2408H82.5279L79.1773 22.6646L82.8786 27.913H79.9322L77.4192 24.0783L76.5961 24.9V27.913H74.1172V15.4891Z" fill="#D81921"/>
+        <path d="M95.1208 27.9414L94.3952 25.1142H91.1956L90.4748 27.9414H87.918L91.0836 16.2024H94.6338L97.8039 27.9414H95.1208ZM92.8611 18.648H92.7248L91.5851 23.0991H94.0202L92.8611 18.648Z" fill="#D81921"/>
+        <path d="M104.47 26.347H104.354C104.15 26.8466 103.83 27.2908 103.424 27.6432C102.952 27.9949 102.373 28.1681 101.787 28.1323C101.335 28.1382 100.886 28.0464 100.472 27.8633C100.068 27.6797 99.716 27.3971 99.4491 27.0416C99.1401 26.6168 98.9143 26.1372 98.7823 25.628C98.458 24.2894 98.458 22.892 98.7823 21.5535C98.9143 21.0444 99.1401 20.5647 99.4491 20.14C99.7188 19.7871 100.07 19.5051 100.472 19.3182C100.886 19.135 101.335 19.0433 101.787 19.0492C102.099 19.0432 102.41 19.0895 102.707 19.1861C102.965 19.2692 103.207 19.3949 103.424 19.5579C103.63 19.7173 103.811 19.9089 103.96 20.1252C104.115 20.3526 104.247 20.5952 104.354 20.8492H104.47V15.4688H106.949V27.9416H104.47V26.347ZM102.858 26.1905C103.259 26.2015 103.654 26.0925 103.993 25.8775C104.155 25.7664 104.284 25.6152 104.37 25.4385C104.455 25.2618 104.493 25.0658 104.48 24.8699V22.3312C104.493 22.1358 104.456 21.9403 104.371 21.7643C104.285 21.5882 104.155 21.4379 103.993 21.3285C103.654 21.112 103.259 21.0013 102.858 21.0106C102.621 20.9932 102.384 21.0279 102.162 21.1125C101.94 21.197 101.738 21.3292 101.573 21.4997C101.251 21.8976 101.09 22.4018 101.12 22.9134V24.2486C101.089 24.7601 101.25 25.2647 101.573 25.6622C101.734 25.8406 101.933 25.9806 102.156 26.0721C102.378 26.1634 102.618 26.204 102.858 26.1905Z" fill="#D81921"/>
+        <path d="M111.484 27.9441L108.387 19.2621H110.997L112.122 22.9795L112.94 25.8751H113.077L113.9 22.9795L115.02 19.2621H117.533L114.435 27.9441H111.484Z" fill="#D81921"/>
+        <path d="M119.563 25.9939H122.31V21.2152H119.563V19.2587H124.793V25.989H127.336V27.9455H119.543L119.563 25.9939ZM123.551 18.1679C123.345 18.191 123.135 18.1727 122.935 18.1139C122.736 18.0551 122.55 17.9571 122.388 17.8255C122.281 17.7147 122.197 17.5837 122.14 17.4402C122.085 17.2966 122.058 17.1433 122.061 16.9891V16.4999C122.056 16.3449 122.083 16.1906 122.139 16.046C122.195 15.9015 122.281 15.7698 122.388 15.6587C122.737 15.4412 123.14 15.326 123.551 15.326C123.963 15.326 124.366 15.4412 124.715 15.6587C124.823 15.7698 124.908 15.9015 124.964 16.046C125.02 16.1906 125.046 16.3449 125.042 16.4999V16.9891C125.046 17.1433 125.019 17.2966 124.962 17.4402C124.907 17.5837 124.823 17.7147 124.715 17.8255C124.552 17.9545 124.366 18.0499 124.166 18.1061C123.966 18.1624 123.757 18.1784 123.551 18.1532V18.1679Z" fill="#D81921"/>
+        <path d="M132.965 28.1433C132.11 28.1636 131.261 28.0156 130.462 27.7079C129.827 27.471 129.27 27.057 128.859 26.5144L130.252 25.2183C130.582 25.5859 130.985 25.8808 131.436 26.084C131.924 26.2989 132.452 26.4056 132.984 26.3971C133.382 26.4164 133.778 26.3375 134.139 26.1672C134.268 26.1047 134.376 26.0058 134.451 25.8824C134.525 25.7591 134.563 25.6167 134.558 25.4726C134.563 25.3724 134.538 25.2728 134.488 25.186C134.438 25.0991 134.364 25.0288 134.275 24.9834C134.024 24.869 133.759 24.7916 133.487 24.7536L132.094 24.5334C131.724 24.4834 131.36 24.3966 131.007 24.2742C130.689 24.1644 130.395 23.9989 130.136 23.7851C129.891 23.5838 129.691 23.3319 129.551 23.0465C129.396 22.7148 129.321 22.3512 129.332 21.9851C129.316 21.5706 129.403 21.1586 129.584 20.7857C129.764 20.4128 130.034 20.0906 130.369 19.8476C131.237 19.2829 132.26 19.0121 133.291 19.0748C134.028 19.056 134.764 19.172 135.458 19.4172C136.012 19.6128 136.506 19.95 136.89 20.3954L135.653 21.809C135.377 21.512 135.046 21.2712 134.68 21.0998C134.219 20.8983 133.72 20.8015 133.219 20.8161C132.244 20.8161 131.757 21.1047 131.757 21.6867C131.746 21.7937 131.767 21.9015 131.818 21.9965C131.868 22.0914 131.945 22.1691 132.04 22.2199C132.291 22.3324 132.556 22.4082 132.828 22.4449L134.202 22.6649C134.571 22.7168 134.935 22.8037 135.288 22.9242C135.607 23.0364 135.905 23.2017 136.17 23.4133C136.42 23.6148 136.622 23.8685 136.764 24.1568C136.918 24.4869 136.994 24.8488 136.983 25.2133C136.996 25.6315 136.908 26.0465 136.726 26.4226C136.543 26.7986 136.272 27.124 135.936 27.3704C135.055 27.9428 134.012 28.2139 132.965 28.1433Z" fill="#D81921"/>
+        <path d="M143.117 28.1439C142.501 28.1533 141.888 28.0488 141.31 27.8357C140.793 27.6408 140.327 27.3334 139.941 26.9357C139.556 26.5254 139.261 26.0368 139.079 25.5026C138.677 24.268 138.677 22.9366 139.079 21.7021C139.261 21.1691 139.555 20.682 139.941 20.2738C140.324 19.8728 140.792 19.5636 141.31 19.3689C142.481 18.9581 143.757 18.9581 144.928 19.3689C145.444 19.565 145.91 19.874 146.292 20.2738C146.678 20.682 146.973 21.1691 147.154 21.7021C147.557 22.9366 147.557 24.268 147.154 25.5026C146.972 26.0368 146.678 26.5254 146.292 26.9357C145.909 27.3323 145.444 27.6396 144.928 27.8357C144.348 28.0486 143.734 28.1529 143.117 28.1439ZM143.117 26.295C143.359 26.3095 143.601 26.2702 143.828 26.1797C144.053 26.0892 144.257 25.9499 144.422 25.7716C144.763 25.3619 144.937 24.8376 144.909 24.3042V22.9248C144.937 22.3915 144.763 21.8674 144.422 21.4575C144.07 21.1213 143.602 20.9339 143.117 20.9339C142.631 20.9339 142.164 21.1213 141.812 21.4575C141.472 21.8683 141.299 22.3918 141.325 22.9248V24.3042C141.298 24.8372 141.472 25.3609 141.812 25.7716C141.977 25.9499 142.181 26.0892 142.406 26.1797C142.631 26.2702 142.874 26.3095 143.117 26.295Z" fill="#D81921"/>
+        <path d="M149.388 25.9923H151.375V21.2135H149.383V19.257H153.854V21.5118H153.971C154.064 21.2234 154.184 20.9448 154.331 20.6803C154.48 20.4086 154.672 20.1639 154.901 19.9564C155.136 19.7498 155.405 19.5844 155.695 19.4673C156.025 19.3306 156.381 19.2639 156.737 19.2717H157.555V21.5608H155.714C155.238 21.5384 154.767 21.6648 154.365 21.9227C154.198 22.0496 154.067 22.2165 153.981 22.408C153.896 22.5994 153.861 22.8094 153.878 23.0184V26.0021H156.732V27.9586H149.427L149.388 25.9923Z" fill="#D81921"/>
+      </svg>
+    </a>
+    <nav class="primary-nav">
+      <a href="#">Portfolio</a>
+      <span class="has-dropdown">Funds <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+      <span class="has-dropdown">Stocks <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+      <span class="has-dropdown">More <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+      <a href="#" class="subscribe-btn">Subscribe</a>
+    </nav>
+    <div class="header-right">
+      <button class="icon-btn-h" aria-label="Search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      </button>
+      <button class="icon-btn-h" aria-label="Notifications">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      </button>
+      <div class="user-avatar-h">A</div>
+    </div>
+  </div>
+</header>
+
+<!-- Page header -->
+<section class="page-header">
+  <div class="container grid-12">
+    <h1 class="col-8">Add Investments</h1>
+    <div class="investor-select col-4" style="position: relative;">
+      <button type="button" class="investor-btn" id="investorBtn">
+        <span class="verified-tick">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        </span>
+        <span class="name">Akshat Srivastava</span>
+        <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="investor-dropdown" id="investorDropdown">
+        <h4>Choose Investor</h4>
+        <ul>
+          <li class="selected">
+            <span class="verified-tick"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+            <span>Akshat Srivastava</span>
+          </li>
+          <li>
+            <span class="verified-tick"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+            <span>Kshitij Srivastava</span>
+          </li>
+          <li>
+            <span class="verified-tick"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+            <span>Priya Shukla</span>
+          </li>
+          <li class="add-inv">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            <span>Add Investor</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Body -->
+<div class="body-content">
+  <div class="container">
+    <a href="#" class="back-to-folio">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      Back to Portfolio
+    </a>
+
+    <div class="grid-12">
+      <aside class="col-4">
+        <ul class="investment-type-tabs" role="tablist">
+          <li><a href="#" data-tab="funds">Funds <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a></li>
+          <li><a href="#" data-tab="stocks" class="active">Stock / ETF <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a></li>
+          <li><a href="#" data-tab="nps">NPS <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a></li>
+          <li><a href="#" data-tab="ppf">PPF <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a></li>
+          <li><a href="#" data-tab="sgb">Sovereign Gold Bonds <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a></li>
+          <li><a href="#" data-tab="bonds">Bonds &amp; Fixed income <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a></li>
+          <li><a href="#" data-tab="reits">InvITs / REITs <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a></li>
+        </ul>
+      </aside>
+
+      <main class="col-8">
+        <!-- STOCKS TAB -->
+        <div class="tab-panel active" data-panel="stocks">
+
+          <!-- Auto Import -->
+          <div class="section-card auto-import-card">
+            <div class="section-head">
+              <h2>
+                Auto Import
+                <svg class="icon-inline" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
+              </h2>
+              <span class="recommended-badge">Recommended</span>
+            </div>
+            <p class="section-desc">Directly import all your stocks from Account Aggregator using your PAN <span class="pan-highlight">GOFPS4701M</span> and mobile number.</p>
+
+            <div class="input-action-row">
+              <input type="text" class="input-field" value="9810826518" id="mobile-num">
+              <button class="btn-purple-outline" id="fetchHoldingsBtn">
+                <span class="btn-label-default">Fetch Holdings</span>
+                <span class="btn-label-refresh">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px; vertical-align:-3px;">
+                    <path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/>
+                    <path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/>
+                  </svg>Refresh
+                </span>
+              </button>
+            </div>
+
+            <p class="section-note">By using auto import feature, you are authorizing Independent Advisor to fetch and store your Stock transaction history, balances, and profile data. You may choose to delete this data anytime in the future.</p>
+
+            <div class="know-more">
+              <span class="know-more-icon">i</span>
+              <span class="know-more-text">
+                <strong>To know more about this method</strong> and in case of any doubt. <a href="#">Click here ›</a>
+              </span>
+            </div>
+          </div>
+
+          <!-- NSDL/CDSL PDF -->
+          <div class="section-card">
+            <div class="section-head">
+              <h2>
+                Import Stocks &amp; ETFs from NSDL / CDSL PDF
+                <span class="info-icon" title="Help">i</span>
+              </h2>
+            </div>
+            <p class="section-desc">Upload your PDF downloaded from the NSDL / CDSL platform.</p>
+
+            <div class="input-action-row">
+              <input type="text" class="input-field" value="GOFPS4701M" readonly>
+              <button class="btn-blue-solid" onclick="document.getElementById('pdf-input').click()">Upload PDF</button>
+              <input type="file" id="pdf-input" accept="application/pdf" style="display:none" onchange="handlePdfUpload(this)">
+            </div>
+
+            <p class="section-note">Note: eCAS holdings without a purchase date are assumed to be invested on the 1st of the statement's month. Ensure the file includes the selected PAN. Only transactions associated with this PAN will be updated.</p>
+          </div>
+
+          <!-- Add US Stocks Manually -->
+          <div class="section-card">
+            <div class="section-head">
+              <h2>Add US Stocks Manually</h2>
+            </div>
+            <p class="section-desc">Select a list of stocks you want to add and enter their individual transactions.</p>
+
+            <button class="btn-blue-solid" onclick="alert('Stock selector would open here')">Select Stocks</button>
+          </div>
+
+        </div>
+
+        <!-- Other tabs -->
+        <div class="tab-panel" data-panel="funds"><div class="section-card"><h2>Add Mutual Funds</h2><p class="section-desc" style="margin-top:16px;">Import via MF Central, upload your CAS, or add transactions manually.</p></div></div>
+        <div class="tab-panel" data-panel="nps"><div class="section-card"><h2>NPS Holdings</h2><p class="section-desc" style="margin-top:16px;">Connect your PRAN to begin importing NPS holdings.</p></div></div>
+        <div class="tab-panel" data-panel="ppf"><div class="section-card"><h2>PPF Account</h2><p class="section-desc" style="margin-top:16px;">Track contributions and accrued interest on your Public Provident Fund.</p></div></div>
+        <div class="tab-panel" data-panel="sgb"><div class="section-card"><h2>Sovereign Gold Bonds</h2><p class="section-desc" style="margin-top:16px;">Track SGB tranches with maturity reminders.</p></div></div>
+        <div class="tab-panel" data-panel="bonds"><div class="section-card"><h2>Bonds &amp; Fixed Income</h2><p class="section-desc" style="margin-top:16px;">Track bonds, debentures, FDs, and government securities.</p></div></div>
+        <div class="tab-panel" data-panel="reits"><div class="section-card"><h2>InvITs / REITs</h2><p class="section-desc" style="margin-top:16px;">Track Infrastructure and Real Estate Investment Trust holdings.</p></div></div>
+
+      </main>
+    </div>
+  </div>
+</div>
+
+<!-- Finvu OTP Drawer -->
+<div class="drawer-backdrop" id="finvuBackdrop"></div>
+<aside class="drawer" id="finvuDrawer" role="dialog" aria-labelledby="finvuTitle" aria-modal="true">
+  <header class="drawer-header">
+    <div class="drawer-brand">
+      <button class="drawer-back" id="drawerBack" aria-label="Back">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <div class="vr-money-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 4h8l1 4H7l1-4Z"/>
+          <path d="M5 8h14l-1.5 11a2 2 0 0 1-2 1.7H8.5a2 2 0 0 1-2-1.7L5 8Z"/>
+          <path d="M12 13v3M10.5 14.5h3"/>
+        </svg>
+      </div>
+      <span class="drawer-brand-name">valueresearch</span>
+    </div>
+    <div class="drawer-header-actions">
+      <button class="lang-toggle" aria-label="Toggle language">Aa/अ</button>
+      <button class="drawer-close" id="finvuClose" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Step 1: OTP -->
+  <div class="drawer-step active" data-step="1">
+    <div class="drawer-body">
+      <h2 class="drawer-title" id="finvuTitle">valueresearch uses Finvu to safely receive your financial details</h2>
+      <p class="drawer-subtitle">Please enter the OTP sent by Finvu on ******6518</p>
+
+      <div class="otp-row" id="otpRow">
+        <input type="text" inputmode="numeric" maxlength="1" class="otp-cell" data-idx="0" autocomplete="one-time-code">
+        <input type="text" inputmode="numeric" maxlength="1" class="otp-cell" data-idx="1">
+        <input type="text" inputmode="numeric" maxlength="1" class="otp-cell" data-idx="2">
+        <input type="text" inputmode="numeric" maxlength="1" class="otp-cell" data-idx="3">
+        <input type="text" inputmode="numeric" maxlength="1" class="otp-cell" data-idx="4">
+        <input type="text" inputmode="numeric" maxlength="1" class="otp-cell" data-idx="5">
+      </div>
+
+      <p class="otp-resend" id="otpResend">
+        Didn't receive OTP? <span class="resend-link">Try Again</span> <span class="timer">in <span id="otpTimer">22</span> sec</span>
+      </p>
+
+      <div class="info-banner">
+        <svg class="info-banner-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+        </svg>
+        <span class="info-banner-text">Joint account holders are not supported at this time</span>
+      </div>
+
+      <div class="stats-card">
+        <div class="stat-row">
+          <span class="stat-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </span>
+          <span><strong>10 Million+</strong> users have used Account Aggregators (AAs)!</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-4 7 4v13M9 21V12h6v9"/></svg>
+          </span>
+          <span>
+            Supported by:
+            <span class="supported-logos">
+              <span class="bank-logo bank-sbi">S</span>
+              <span class="bank-logo bank-icici">I</span>
+              <span class="bank-logo bank-axis">A</span>
+              <span class="bank-logo bank-hdfc">H</span>
+            </span>
+            <span class="others-pill">+ 30 others</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <footer class="drawer-footer">
+      <button class="verify-btn" id="verifyBtn" disabled>Verify &amp; Proceed</button>
+      <p class="terms-text">By clicking "Verify &amp; Proceed" you agree to<br><a href="#">Finvu's Terms and Conditions</a></p>
+      <div class="powered-by">
+        Powered by RBI-Regulated AA
+        <span class="finvu-logo"><span class="finvu-mark"></span>FINVU</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Step 2: Select Accounts -->
+  <div class="drawer-step" data-step="2">
+    <div class="accounts-header">
+      <h2>Select Accounts</h2>
+      <p>Choose the accounts you want to share</p>
+    </div>
+
+    <div class="accounts-body" id="accountsBody">
+      <div class="section-meta">
+        <div>
+          <div class="meta-title">Demat Accounts</div>
+          <div class="meta-sub">ETFs, Stocks</div>
+        </div>
+        <div class="meta-count"><span id="selectedCount">0</span> of <span id="totalCount">0</span> selected</div>
+      </div>
+
+      <!-- CDSL card -->
+      <div class="depo-card" id="cdslCard" data-depo="cdsl">
+        <div class="depo-card-head">
+          <span class="depo-logo">
+            <!-- CDSL diamond/chevron mark - approximation -->
+            <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <g fill="#1e3a8a">
+                <path d="M12 2 L18 8 L12 12 L6 8 Z"/>
+                <path d="M12 12 L18 16 L12 22 L6 16 Z" opacity="0.85"/>
+              </g>
+              <circle cx="12" cy="12" r="1.6" fill="#dc2626"/>
+            </svg>
+          </span>
+          <h3>Demats via Central Depository Services Limited</h3>
+          <span class="depo-help" title="Help">?</span>
+        </div>
+        <div class="depo-accounts" id="cdslAccounts"></div>
+      </div>
+
+      <!-- NSDL card -->
+      <div class="depo-card" id="nsdlCard" data-depo="nsdl">
+        <div class="depo-card-head">
+          <span class="depo-logo">
+            <!-- NSDL swirl mark - approximation -->
+            <svg width="22" height="22" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="nsdl-grad-sm" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#fbbf24"/>
+                  <stop offset="100%" stop-color="#dc2626"/>
+                </radialGradient>
+              </defs>
+              <path d="M16 6 C 22 6, 26 10, 26 16 C 26 22, 22 26, 16 26 C 12 26, 9 23, 9 19 C 9 15, 12 13, 15 13 C 17 13, 18 14, 18 16 C 18 18, 17 19, 16 19"
+                    fill="none" stroke="url(#nsdl-grad-sm)" stroke-width="3.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <h3>Demats via National Securities Depository Limited</h3>
+          <span class="depo-help" title="Help">?</span>
+        </div>
+        <div class="depo-accounts" id="nsdlAccounts"></div>
+      </div>
+
+      <!-- Empty state shown only when a depository returns 0 accounts -->
+      <div class="no-accounts-card" id="noAccountsCard" style="display:none;">
+        <h4 id="noAccountsText">We were unable to find any accounts in these Depositories or RTAs</h4>
+        <div class="no-accounts-foot">
+          <span class="nsdl-logo-mark" id="noAccountsLogo"></span>
+          <a href="#" class="learn-more">Learn More</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="accounts-info-row">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+        <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+      </svg>
+      <span>You can pause or cancel sharing anytime via the Finvu app</span>
+    </div>
+
+    <footer class="step2-footer">
+      <button class="continue-btn" id="continueBtn" disabled>Continue</button>
+      <div class="powered-by">
+        Powered by RBI-Regulated AA
+        <span class="finvu-logo"><span class="finvu-mark"></span>FINVU</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Step 3: One last check -->
+  <div class="drawer-step" data-step="3">
+    <div class="review-header">
+      <h2>One last check!</h2>
+      <p>Review how valueresearch will be using your financial details</p>
+    </div>
+
+    <div class="review-body">
+      <!-- Accounts being shared -->
+      <div class="review-card">
+        <div class="review-card-head">
+          <h3>Accounts being shared</h3>
+          <a href="#" class="manage-link" id="manageLink">Manage</a>
+        </div>
+        <p class="accounts-being-shared-sub">Demat accounts &amp; Folios</p>
+        <div class="account-pills" id="accountPills"></div>
+      </div>
+
+      <!-- Usage details -->
+      <div class="review-card">
+        <div class="usage-row">
+          <span class="usage-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6M8 11h6"/>
+            </svg>
+          </span>
+          <div class="usage-text">
+            <p class="usage-label">How your data will be used</p>
+            <p class="usage-value">Customer spending patterns, budget or other reportings</p>
+          </div>
+          <a href="#" class="view-link">View</a>
+        </div>
+
+        <div class="usage-row">
+          <span class="usage-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+            </svg>
+          </span>
+          <div class="usage-text">
+            <p class="usage-label">How often data is accessed</p>
+            <p class="usage-value">45 / Month</p>
+          </div>
+        </div>
+
+        <div class="usage-row">
+          <span class="usage-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </span>
+          <div class="usage-text">
+            <p class="usage-label">Access valid till</p>
+            <p class="usage-value" id="accessValidTill">30 Apr 2026 to 30 Apr 2027</p>
+          </div>
+        </div>
+
+        <div class="usage-row">
+          <span class="usage-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>
+            </svg>
+          </span>
+          <div class="usage-text">
+            <p class="usage-label">How long it's used</p>
+            <p class="usage-value">1 Month</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add more accounts banner -->
+      <div class="add-more-banner">
+        <span class="left">Missing any accounts?</span>
+        <span class="add-more-link" id="addMoreLink">
+          Add more accounts
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="accounts-info-row">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+        <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+      </svg>
+      <span>You can pause or cancel sharing anytime via the Finvu app</span>
+    </div>
+
+    <footer class="step3-footer">
+      <button class="give-permission-btn" id="givePermissionBtn">Give permission</button>
+      <button class="decline-btn" id="declineBtn">Decline</button>
+      <div class="powered-by">
+        Powered by RBI-Regulated AA
+        <span class="finvu-logo"><span class="finvu-mark"></span>FINVU</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Step 4: Success -->
+  <div class="drawer-step" data-step="4">
+    <div class="success-body">
+      <div class="success-check">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 6 9 17l-5-5"/>
+        </svg>
+      </div>
+      <h2 class="success-headline">You have successfully shared your accounts with valueresearch</h2>
+      <div class="success-pills account-pills" id="successPills"></div>
+      <div class="success-info-banner">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+        </svg>
+        <span>You can pause or cancel sharing anytime via the Finvu app</span>
+      </div>
+    </div>
+
+    <div class="success-footer-bar">
+      <div class="drawer-brand">
+        <div class="vr-money-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 4h8l1 4H7l1-4Z"/>
+            <path d="M5 8h14l-1.5 11a2 2 0 0 1-2 1.7H8.5a2 2 0 0 1-2-1.7L5 8Z"/>
+            <path d="M12 13v3M10.5 14.5h3"/>
+          </svg>
+        </div>
+        <span class="drawer-brand-name">valueresearch</span>
+      </div>
+      <button class="lang-toggle">Aa/अ</button>
+    </div>
+
+    <p class="redirect-msg">Redirecting to valueresearch in <span id="redirectCounter">3</span> seconds...</p>
+  </div>
+</aside>
+
+<footer>© 2026 Value Research India Pvt. Ltd. All rights reserved.</footer>
+
+<script>
+  const investorBtn = document.getElementById('investorBtn');
+  const investorDropdown = document.getElementById('investorDropdown');
+  investorBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    investorBtn.classList.toggle('open');
+    investorDropdown.classList.toggle('open');
+  });
+  document.addEventListener('click', (e) => {
+    if (!investorDropdown.contains(e.target) && !investorBtn.contains(e.target)) {
+      investorBtn.classList.remove('open');
+      investorDropdown.classList.remove('open');
+    }
+  });
+  investorDropdown.querySelectorAll('ul li:not(.add-inv)').forEach(li => {
+    li.addEventListener('click', () => {
+      investorDropdown.querySelectorAll('ul li').forEach(x => x.classList.remove('selected'));
+      li.classList.add('selected');
+      const name = li.querySelector('span:last-child').textContent;
+      investorBtn.querySelector('.name').textContent = name;
+      investorBtn.classList.remove('open');
+      investorDropdown.classList.remove('open');
+    });
+  });
+
+  const tabLinks = document.querySelectorAll('.investment-type-tabs a');
+  const panels = document.querySelectorAll('.tab-panel');
+  tabLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      tabLinks.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+      const target = link.dataset.tab;
+      panels.forEach(p => p.classList.toggle('active', p.dataset.panel === target));
+    });
+  });
+
+  function handlePdfUpload(input) {
+    if (input.files && input.files[0]) {
+      alert('PDF selected: ' + input.files[0].name);
+    }
+  }
+
+  // ---- Finvu OTP Drawer ----
+  const finvuDrawer = document.getElementById('finvuDrawer');
+  const finvuBackdrop = document.getElementById('finvuBackdrop');
+  const fetchBtn = document.getElementById('fetchHoldingsBtn');
+  const finvuClose = document.getElementById('finvuClose');
+  const otpCells = document.querySelectorAll('.otp-cell');
+  const verifyBtn = document.getElementById('verifyBtn');
+  const otpResend = document.getElementById('otpResend');
+  const otpTimer = document.getElementById('otpTimer');
+  let timerInterval = null;
+
+  function openDrawer() {
+    finvuDrawer.classList.add('open');
+    finvuBackdrop.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    // Always start at Step 1
+    drawerSteps && drawerSteps.forEach(s => {
+      s.classList.toggle('active', parseInt(s.dataset.step) === 1);
+    });
+    const backBtn = document.getElementById('drawerBack');
+    if (backBtn) backBtn.classList.remove('visible');
+    // Reset OTP state
+    otpCells.forEach(c => { c.value = ''; c.classList.remove('filled'); });
+    setTimeout(() => otpCells[0].focus(), 320);
+    verifyBtn.disabled = true;
+    verifyBtn.classList.remove('active');
+    startTimer();
+  }
+  function closeDrawer() {
+    finvuDrawer.classList.remove('open');
+    finvuBackdrop.classList.remove('open');
+    document.body.style.overflow = '';
+    if (timerInterval) clearInterval(timerInterval);
+    if (typeof redirectInterval !== 'undefined' && redirectInterval) {
+      clearInterval(redirectInterval);
+      redirectInterval = null;
+    }
+    // Restore close X for next open
+    if (finvuClose) finvuClose.style.display = '';
+  }
+  function startTimer() {
+    let secs = 22;
+    otpResend.classList.remove('active');
+    otpTimer.textContent = secs;
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      secs -= 1;
+      otpTimer.textContent = secs;
+      if (secs <= 0) {
+        clearInterval(timerInterval);
+        otpResend.classList.add('active');
+      }
+    }, 1000);
+  }
+
+  fetchBtn.addEventListener('click', openDrawer);
+  finvuClose.addEventListener('click', closeDrawer);
+  finvuBackdrop.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && finvuDrawer.classList.contains('open')) closeDrawer();
+  });
+
+  // OTP cell behavior
+  function checkOtpComplete() {
+    const allFilled = Array.from(otpCells).every(c => c.value.length === 1);
+    if (allFilled) {
+      verifyBtn.disabled = false;
+      verifyBtn.classList.add('active');
+    } else {
+      verifyBtn.disabled = true;
+      verifyBtn.classList.remove('active');
+    }
+  }
+
+  otpCells.forEach((cell, i) => {
+    cell.addEventListener('input', (e) => {
+      // Only allow digits
+      cell.value = cell.value.replace(/\D/g, '');
+      if (cell.value.length === 1) {
+        cell.classList.add('filled');
+        if (i < otpCells.length - 1) otpCells[i + 1].focus();
+      } else {
+        cell.classList.remove('filled');
+      }
+      checkOtpComplete();
+    });
+    cell.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !cell.value && i > 0) {
+        otpCells[i - 1].focus();
+        otpCells[i - 1].value = '';
+        otpCells[i - 1].classList.remove('filled');
+        checkOtpComplete();
+      } else if (e.key === 'ArrowLeft' && i > 0) {
+        otpCells[i - 1].focus();
+      } else if (e.key === 'ArrowRight' && i < otpCells.length - 1) {
+        otpCells[i + 1].focus();
+      }
+    });
+    cell.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const pasted = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 6);
+      [...pasted].forEach((digit, idx) => {
+        if (otpCells[idx]) {
+          otpCells[idx].value = digit;
+          otpCells[idx].classList.add('filled');
+        }
+      });
+      checkOtpComplete();
+      const nextIdx = Math.min(pasted.length, otpCells.length - 1);
+      otpCells[nextIdx].focus();
+    });
+  });
+
+  verifyBtn.addEventListener('click', () => {
+    if (verifyBtn.disabled) return;
+    goToStep(2);
+  });
+
+  // Resend OTP click (only active after timer expires)
+  otpResend.querySelector('.resend-link').addEventListener('click', () => {
+    if (otpResend.classList.contains('active')) startTimer();
+  });
+
+  // ---- Step navigation ----
+  const drawerSteps = document.querySelectorAll('.drawer-step');
+  let redirectInterval = null;
+  function goToStep(n) {
+    drawerSteps.forEach(s => {
+      s.classList.toggle('active', parseInt(s.dataset.step) === n);
+    });
+    // Show back arrow only on steps 2 and 3 (not on Step 4 — terminal state)
+    const backBtn = document.getElementById('drawerBack');
+    if (backBtn) backBtn.classList.toggle('visible', n === 2 || n === 3);
+    // Hide close X on Step 4 (terminal state — auto-redirects)
+    if (finvuClose) finvuClose.style.display = n === 4 ? 'none' : '';
+
+    // Clear any active countdown when leaving Step 4
+    if (redirectInterval) { clearInterval(redirectInterval); redirectInterval = null; }
+
+    if (n === 2) populateAccounts();
+    if (n === 3) renderReviewStep();
+    if (n === 4) renderSuccessStep();
+  }
+
+  // ---- Step 2: Account generation & selection ----
+  const cdslCard = document.getElementById('cdslCard');
+  const nsdlCard = document.getElementById('nsdlCard');
+  const cdslAccountsEl = document.getElementById('cdslAccounts');
+  const nsdlAccountsEl = document.getElementById('nsdlAccounts');
+  const noAccountsCard = document.getElementById('noAccountsCard');
+  const noAccountsText = document.getElementById('noAccountsText');
+  const noAccountsLogo = document.getElementById('noAccountsLogo');
+  const continueBtn = document.getElementById('continueBtn');
+  const selectedCountEl = document.getElementById('selectedCount');
+  const totalCountEl = document.getElementById('totalCount');
+
+  function randomMaskedNum() {
+    return 'xx' + Math.floor(1000 + Math.random() * 9000);
+  }
+  function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  // SVG markup for the depository logos used in the empty-state card
+  const depoLogoSvg = {
+    cdsl: `<svg width="32" height="32" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <g fill="#1e3a8a">
+        <path d="M12 2 L18 8 L12 12 L6 8 Z"/>
+        <path d="M12 12 L18 16 L12 22 L6 16 Z" opacity="0.85"/>
+      </g>
+      <circle cx="12" cy="12" r="1.6" fill="#dc2626"/>
+    </svg>`,
+    nsdl: `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="nsdl-grad-empty" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fbbf24"/>
+          <stop offset="100%" stop-color="#dc2626"/>
+        </radialGradient>
+      </defs>
+      <circle cx="16" cy="16" r="15" fill="#fff" stroke="#e5e7eb" stroke-width="0.5"/>
+      <path d="M16 6 C 22 6, 26 10, 26 16 C 26 22, 22 26, 16 26 C 12 26, 9 23, 9 19 C 9 15, 12 13, 15 13 C 17 13, 18 14, 18 16 C 18 18, 17 19, 16 19"
+            fill="none" stroke="url(#nsdl-grad-empty)" stroke-width="3" stroke-linecap="round"/>
+      <text x="16" y="29" font-family="Arial, sans-serif" font-size="4.5" font-weight="700" fill="#dc2626" text-anchor="middle">NSDL</text>
+    </svg>`
+  };
+
+  function generateAccounts(count) {
+    // Generate `count` accounts, mixing ETF and EQUITIES randomly
+    const accounts = [];
+    for (let i = 0; i < count; i++) {
+      accounts.push({
+        type: Math.random() < 0.5 ? 'ETF' : 'EQUITIES',
+        num: randomMaskedNum()
+      });
+    }
+    accounts.sort((a, b) => a.num.localeCompare(b.num));
+    return accounts;
+  }
+
+  function renderAccountList(container, accounts, depoKey) {
+    container.innerHTML = '';
+    accounts.forEach((acc, idx) => {
+      const row = document.createElement('div');
+      row.className = 'account-row';
+      row.innerHTML = `
+        <span class="account-info">
+          <span class="acc-type">${acc.type}</span> · <span class="acc-num">${acc.num}</span>
+        </span>
+        <span class="linked-tag">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+          Linked
+        </span>
+        <input type="checkbox" class="acc-checkbox" data-depo="${depoKey}" data-idx="${idx}">
+      `;
+      container.appendChild(row);
+    });
+  }
+
+  function populateAccounts() {
+    // Hard cap: max 4 accounts TOTAL across both depositories (no internal scroll).
+    const MAX_TOTAL = 4;
+    const total = Math.min(randomInt(2, MAX_TOTAL), MAX_TOTAL);
+    const cdslCount = Math.min(randomInt(0, total), MAX_TOTAL);
+    const nsdlCount = Math.min(total - cdslCount, MAX_TOTAL - cdslCount);
+
+    // Render CDSL
+    if (cdslCount > 0) {
+      cdslCard.style.display = '';
+      renderAccountList(cdslAccountsEl, generateAccounts(cdslCount), 'cdsl');
+    } else {
+      cdslCard.style.display = 'none';
+    }
+
+    // Render NSDL
+    if (nsdlCount > 0) {
+      nsdlCard.style.display = '';
+      renderAccountList(nsdlAccountsEl, generateAccounts(nsdlCount), 'nsdl');
+    } else {
+      nsdlCard.style.display = 'none';
+    }
+
+    // Empty-state card — show when one of the depositories has 0 accounts
+    if (cdslCount === 0 && nsdlCount > 0) {
+      noAccountsCard.style.display = '';
+      noAccountsLogo.innerHTML = depoLogoSvg.cdsl;
+    } else if (nsdlCount === 0 && cdslCount > 0) {
+      noAccountsCard.style.display = '';
+      noAccountsLogo.innerHTML = depoLogoSvg.nsdl;
+    } else {
+      noAccountsCard.style.display = 'none';
+    }
+
+    totalCountEl.textContent = total;
+    selectedCountEl.textContent = '0';
+    continueBtn.disabled = true;
+    continueBtn.classList.remove('active');
+
+    // Bind checkbox listeners
+    document.querySelectorAll('.acc-checkbox').forEach(cb => {
+      cb.addEventListener('change', updateSelectedState);
+    });
+  }
+
+  function updateSelectedState() {
+    const checked = document.querySelectorAll('.acc-checkbox:checked').length;
+    selectedCountEl.textContent = checked;
+    if (checked >= 1) {
+      continueBtn.disabled = false;
+      continueBtn.classList.add('active');
+    } else {
+      continueBtn.disabled = true;
+      continueBtn.classList.remove('active');
+    }
+  }
+
+  continueBtn.addEventListener('click', () => {
+    if (continueBtn.disabled) return;
+    goToStep(3);
+  });
+
+  // ---- Step 3: Review (One last check) ----
+  const accountPillsEl = document.getElementById('accountPills');
+  const accessValidTillEl = document.getElementById('accessValidTill');
+  const givePermissionBtn = document.getElementById('givePermissionBtn');
+  const declineBtn = document.getElementById('declineBtn');
+  const manageLink = document.getElementById('manageLink');
+  const addMoreLink = document.getElementById('addMoreLink');
+  const drawerBack = document.getElementById('drawerBack');
+
+  // Mini SVGs for pill logos (smaller versions of CDSL/NSDL marks)
+  const pillLogoSvg = {
+    cdsl: `<svg width="14" height="14" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <g fill="#1e3a8a">
+        <path d="M12 2 L18 8 L12 12 L6 8 Z"/>
+        <path d="M12 12 L18 16 L12 22 L6 16 Z" opacity="0.85"/>
+      </g>
+      <circle cx="12" cy="12" r="1.6" fill="#dc2626"/>
+    </svg>`,
+    nsdl: `<svg width="14" height="14" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="nsdl-grad-pill" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fbbf24"/>
+          <stop offset="100%" stop-color="#dc2626"/>
+        </radialGradient>
+      </defs>
+      <path d="M16 6 C 22 6, 26 10, 26 16 C 26 22, 22 26, 16 26 C 12 26, 9 23, 9 19 C 9 15, 12 13, 15 13 C 17 13, 18 14, 18 16 C 18 18, 17 19, 16 19"
+            fill="none" stroke="url(#nsdl-grad-pill)" stroke-width="4" stroke-linecap="round"/>
+    </svg>`
+  };
+
+  function renderReviewStep() {
+    // Pull selected accounts from Step 2
+    const selectedCheckboxes = document.querySelectorAll('.acc-checkbox:checked');
+    accountPillsEl.innerHTML = '';
+    selectedCheckboxes.forEach(cb => {
+      const row = cb.closest('.account-row');
+      const accNum = row.querySelector('.acc-num').textContent.trim(); // e.g. "xx4868"
+      const last4 = accNum.replace(/^xx/, '');
+      const depo = cb.dataset.depo; // 'cdsl' or 'nsdl'
+      const pill = document.createElement('span');
+      pill.className = 'account-pill';
+      pill.innerHTML = `
+        <span class="pill-logo">${pillLogoSvg[depo]}</span>
+        <span class="dot">•</span>
+        <span class="pill-num">${last4}</span>
+      `;
+      accountPillsEl.appendChild(pill);
+    });
+
+    // Set "Access valid till" to today + 1 year
+    const now = new Date();
+    const future = new Date(now);
+    future.setFullYear(future.getFullYear() + 1);
+    const fmt = (d) => d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    accessValidTillEl.textContent = `${fmt(now)} to ${fmt(future)}`;
+  }
+
+  givePermissionBtn.addEventListener('click', () => {
+    goToStep(4);
+  });
+  declineBtn.addEventListener('click', () => {
+    // Decline takes the user back to the previous step (Step 2 — account selection)
+    goToStep(2);
+  });
+
+  // ---- Step 4: Success ----
+  const successPillsEl = document.getElementById('successPills');
+  const redirectCounterEl = document.getElementById('redirectCounter');
+
+  function renderSuccessStep() {
+    // Re-render the same pills from Step 3 (selected accounts)
+    successPillsEl.innerHTML = accountPillsEl.innerHTML;
+
+    // Countdown then close (simulating redirect back to valueresearch)
+    let secs = 3;
+    redirectCounterEl.textContent = secs;
+    redirectInterval = setInterval(() => {
+      secs -= 1;
+      redirectCounterEl.textContent = secs;
+      if (secs <= 0) {
+        clearInterval(redirectInterval);
+        redirectInterval = null;
+        closeDrawer();
+        // Holdings have been fetched — flip the CTA to Refresh state
+        fetchBtn.classList.add('is-refresh');
+      }
+    }, 1000);
+  }
+
+  // "Manage" goes back to Step 2 (without losing selections)
+  manageLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    goToStep(2);
+  });
+  // "Add more accounts" → also go back to Step 2
+  addMoreLink.addEventListener('click', () => {
+    goToStep(2);
+  });
+
+  // Back arrow in drawer header
+  drawerBack.addEventListener('click', () => {
+    const currentStep = parseInt(document.querySelector('.drawer-step.active').dataset.step);
+    if (currentStep > 1) goToStep(currentStep - 1);
+  });
+
+  // Reset to Step 1 whenever the drawer opens fresh
+  function resetDrawerToStep1() {
+    drawerSteps.forEach(s => {
+      s.classList.toggle('active', parseInt(s.dataset.step) === 1);
+    });
+  }
+</script>
+
+</body>
+</html>
